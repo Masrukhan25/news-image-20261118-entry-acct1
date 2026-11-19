@@ -20,6 +20,10 @@ def main():
     # Confirm the copy is complete: same size as the bundled image.
     if os.path.getsize(dst) != os.path.getsize(src):
         raise RuntimeError("entry.png copy is incomplete")
+    # PNG signature check: the first 8 bytes must be the PNG magic.
+    with open(dst, "rb") as fh:
+        if fh.read(8) != b"\x89PNG\r\n\x1a\n":
+            raise RuntimeError("entry.png is not a valid PNG")
     print(f"wrote {dst} ({os.path.getsize(dst)} bytes)")
     return 0
 
